@@ -11,15 +11,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - build-and-release-production:
-          requires: [test, checks]
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only:
-                - master
-      - build-and-release-container:
+      - build-and-release:
           requires: [test, checks]
           filters:
             tags:
@@ -38,6 +30,9 @@ jobs:
           MC_DOODLE_MYSQL_NAME: mc_doodle
           MC_DOODLE_MYSQL_PASSWORD: mc_doodle
           MC_DOODLE_PASSWORD_SALT: abcd
+          MC_DOODLE_REDIS_URL: redis://redis:6379/0
+      - image: circleci/redis:latest
+        name: redis
       - image: circleci/mysql:5.7
         name: mysql
         environment:
@@ -98,7 +93,7 @@ jobs:
       - run:
           name: Rubocop
           command: rubocop
-  build-and-release-production:
+  build-and-release:
     machine: true
     steps:
       - checkout
@@ -126,16 +121,3 @@ jobs:
       - run:
           name: Populate fields
           command: scripts/release.sh populate
-  build-and-release-container:
-    machine: true
-    steps:
-      - checkout
-      - run:
-          name: Docker login
-          command: docker login --username=$DOCKER_USER --password=$DOCKER_PASS
-      - run:
-          name: Make Build
-          command: scripts/release.sh build-local
-      - run:
-          name: Release
-          command: scripts/release.sh release-local

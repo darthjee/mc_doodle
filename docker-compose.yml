@@ -1,0 +1,89 @@
+version: '3'
+services:
+  dev_mc_doodle_mysql:
+    image: mysql:5.7
+    container_name: dev_mc_doodle_mysql
+    env_file: .env.dev
+    environment:
+      MYSQL_ROOT_PASSWORD: mc_doodle
+    ports:
+      - 127.0.0.1:$DEV_MC_DOODLE_MYSQL_PORT:3306
+
+  mc_doodle_mysql:
+    image: mysql:5.7
+    container_name: mc_doodle_mysql
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: mc_doodle
+    ports:
+      - 127.0.0.1:$LOCAL_MC_DOODLE_MYSQL_PORT:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+
+  #################### Base  ####################
+
+  base: &base
+    image: darthjee/dev_mc_doodle
+    volumes:
+      - ./source:/home/app/app
+    links:
+      - dev_mc_doodle_mysql:mysql
+    env_file: .env.dev
+
+
+  base_build:
+    <<: *base
+    build:
+      context: .
+      dockerfile: Dockerfile.dev_mc_doodle
+    command: echo done
+
+  production_base_build:
+    image: darthjee/production_mc_doodle
+    env_file: .env.dev
+    environment:
+      RAILS_ENV: production
+    build:
+      context: .
+      dockerfile: Dockerfile.production_mc_doodle
+    command: echo done
+  #################### CONTAINERS ####################
+
+  mc_doodle_app:
+    <<: *base
+    container_name: mc_doodle_app
+    command: /bin/bash bin/server.sh
+    depends_on: [base_build]
+    ports:
+      - 127.0.0.1:3000:3000
+    environment:
+      - RAILS_ENV=development
+      - MC_DOODLE_MYSQL_PORT=3306
+
+  mc_doodle_tests:
+    <<: *base
+    container_name: mc_doodle_tests
+    command: /bin/bash bin/tests.sh
+    depends_on: [base_build]
+    environment:
+      - RAILS_ENV=test
+
+  mc_doodle_root:
+    <<: *base
+    user: root
+    container_name: mc_doodle_root
+    command: /bin/bash
+    depends_on: [base_build]
+
+  mc_doodle_production:
+    env_file: .env.production
+    container_name: mc_doodle_production
+    image: $PRODUCTION_IMAGE
+
+  mc_doodle:
+    env_file: .env
+    container_name: mc_doodle
+    image: darthjee/mc_doodle
+    links:
+      - mc_doodle_mysql:mysql

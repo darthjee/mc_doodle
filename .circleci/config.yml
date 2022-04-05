@@ -1,0 +1,141 @@
+version: 2
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /.*/
+      - checks:
+          filters:
+            tags:
+              only: /.*/
+      - build-and-release-production:
+          requires: [test, checks]
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only:
+                - master
+      - build-and-release-container:
+          requires: [test, checks]
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only:
+                - master
+jobs:
+  test:
+    docker:
+      - image: darthjee/circleci_mc_doodle-base:0.0.1
+        environment:
+          MC_DOODLE_MYSQL_HOST: mysql
+          MC_DOODLE_MYSQL_PORT: 3306
+          MC_DOODLE_MYSQL_USER: mc_doodle
+          MC_DOODLE_MYSQL_NAME: mc_doodle
+          MC_DOODLE_MYSQL_PASSWORD: mc_doodle
+          MC_DOODLE_PASSWORD_SALT: abcd
+      - image: circleci/mysql:5.7
+        name: mysql
+        environment:
+          MYSQL_DATABASE: mc_doodle_test
+          MYSQL_USER: mc_doodle
+          MYSQL_PASSWORD: mc_doodle
+    steps:
+      - checkout
+      - run:
+          name: Set folder
+          command: cp source/* source/.??* ./ -r; rm source -rf
+      - run:
+          name: Prepare Coverage Test Report
+          command: cc-test-reporter before-build
+      - run:
+          name: Bundle Install
+          command: bundle install
+      - run:
+          name: Bower Install
+          command: bundle exec rake bower:install
+      - run:
+          name: Wait for database
+          command: scripts/wait_for_db.sh
+      - run:
+          name: Migrate
+          command: RAILS_ENV=test bundle exec rake db:schema:load
+      - run:
+          name: RSpec
+          command: bundle exec rspec
+      - run:
+          name: Coverage Test Report
+          command: cc-test-reporter after-build --exit-code $?
+
+  checks:
+    docker:
+      - image: darthjee/circleci_mc_doodle-base:0.0.1
+        environment:
+          MC_DOODLE_MYSQL_HOST: mysql
+          MC_DOODLE_MYSQL_PORT: 3306
+          MC_DOODLE_MYSQL_USER: mc_doodle
+          MC_DOODLE_MYSQL_NAME: mc_doodle
+          MC_DOODLE_MYSQL_PASSWORD: mc_doodle
+          MC_DOODLE_PASSWORD_SALT: abcd
+      - image: circleci/mysql:5.7
+        name: mysql
+        environment:
+          MYSQL_DATABASE: mc_doodle_test
+          MYSQL_USER: mc_doodle
+          MYSQL_PASSWORD: mc_doodle
+    steps:
+      - checkout
+      - run:
+          name: Set folder
+          command: cp source/* source/.??* ./ -r; rm source -rf
+      - run:
+          name: Bundle Install
+          command: bundle install
+      - run:
+          name: Rubocop
+          command: rubocop
+  build-and-release-production:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Make Build
+          command: scripts/release.sh build
+      - run:
+          name: Install Heroku
+          command: scripts/release.sh install
+      - run:
+          name: set heroku app
+          command: scripts/release.sh set-app
+      - run:
+          name: Heroku docker login
+          command: scripts/release.sh signin
+      - run:
+          name: Build heroku image
+          command: scripts/release.sh build-heroku
+      - run:
+          name: Release
+          command: scripts/release.sh release
+      - run:
+          name: Migrate
+          command: scripts/release.sh migrate
+      - run:
+          name: Populate fields
+          command: scripts/release.sh populate
+  build-and-release-container:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Docker login
+          command: docker login --username=$DOCKER_USER --password=$DOCKER_PASS
+      - run:
+          name: Make Build
+          command: scripts/release.sh build-local
+      - run:
+          name: Release
+          command: scripts/release.sh release-local

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Move < ApplicationRecord
   def self.table_name_prefix
     'move_'

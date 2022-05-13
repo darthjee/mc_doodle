@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :move_item, class: 'Move::Item' do
-    sequence(:name) { |n| "Item ##{n}"  }
+    sequence(:name) { |n| "Item ##{n}" }
     move
   end
 end

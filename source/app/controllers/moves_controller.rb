@@ -2,6 +2,7 @@
 
 class MovesController < ApplicationController
   include OnePageApplication
+  include LoggedUser
 
   protect_from_forgery except: %i[create]
 
@@ -13,10 +14,6 @@ class MovesController < ApplicationController
   private
 
   def moves
-    user.moves
-  end
-
-  def user
-    User.last
+    logged_user.moves
   end
 end

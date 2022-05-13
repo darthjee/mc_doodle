@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-describe MovesController, type: :controller do
-  let!(:user) { create(:user) }
+describe MovesController, :logged, type: :controller do
+  let(:user) { logged_user }
 
   let(:expected_json) do
     Move::Decorator.new(expected_object).to_json

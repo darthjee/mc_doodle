@@ -9,7 +9,7 @@
       <table class="table">
         <thead>
           <th scope="col">Id</th>
-          <th scope="col">offset</th>
+          <th scope="col">Title</th>
         </thead>
         <tbody>
           <tr>
@@ -25,7 +25,7 @@
               {{move.id}}
               <% end %>
             </td>
-            <td>{{move.offset}}</td>
+            <td>{{move.title}}</td>
             <td>
               <%= angular_safe_link_to(:edit_move, { id: "{{move.id}}" }, class: "text-dark") do %>
               edit

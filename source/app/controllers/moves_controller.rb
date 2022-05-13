@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DevicesController < ApplicationController
+class MovesController < ApplicationController
   include OnePageApplication
 
   protect_from_forgery except: %i[create]

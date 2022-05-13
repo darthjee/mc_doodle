@@ -1,0 +1,46 @@
+<div class="card-deck mb-3">
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">
+        Moves
+      </h4>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <th scope="col">Id</th>
+          <th scope="col">Title</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2">
+              <%= angular_safe_link_to(:new_move, {}, class: "text-dark") do %>
+              + New Move
+              <% end %>
+            </td>
+          </tr>
+          <tr ng-repeat="move in gnc.data">
+            <td>
+              <%= angular_safe_link_to(:move, { id: "{{move.id}}" }, class: "text-dark") do %>
+              {{move.id}}
+              <% end %>
+            </td>
+            <td>{{move.title}}</td>
+            <td>
+              <%= angular_safe_link_to(:edit_move, { id: "{{move.id}}" }, class: "text-dark") do %>
+              edit
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <%= magicka_display('gnc') do |display|
+              display.pagination('pagination',
+              path_method: :moves
+              )
+              end %>
+
+    </div>
+  </div>
+</div>

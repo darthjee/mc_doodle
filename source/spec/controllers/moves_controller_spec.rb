@@ -273,7 +273,6 @@ describe MovesController, :logged, type: :controller do
 
   describe 'PATCH update' do
     context 'when requesting json format' do
-
       let(:move)    { create(:move, user: user) }
       let(:move_id) { move.id }
       let(:expected_json) do
@@ -294,7 +293,7 @@ describe MovesController, :logged, type: :controller do
 
       it 'updates the move' do
         expect { patch :update, params: parameters }
-          .to change { move.reload.title }
+          .to(change { move.reload.title })
       end
 
       it 'returns move with errors' do

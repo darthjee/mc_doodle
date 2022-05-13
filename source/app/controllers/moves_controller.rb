@@ -7,9 +7,9 @@ class MovesController < ApplicationController
   protect_from_forgery except: %i[create]
 
   resource_for :move,
-    except: :delete,
-    paginated: true,
-    per_page: Settings.pagination
+               except: :delete,
+               paginated: true,
+               per_page: Settings.pagination
 
   private
 

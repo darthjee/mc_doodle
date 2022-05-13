@@ -11,4 +11,6 @@ Rails.application.routes.draw do
       delete '/logoff' => 'login#logoff'
     end
   end
+
+  resources :moves, except: %i[delete]
 end

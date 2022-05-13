@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 describe MovesController, type: :controller do
+  let!(:user) { create(:user) }
+
   let(:expected_json) do
     Move::Decorator.new(expected_object).to_json
   end
@@ -155,7 +157,7 @@ describe MovesController, type: :controller do
 
       let(:payload) do
         {
-          offset: 15
+          title: 'my move'
         }
       end
 

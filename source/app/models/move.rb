@@ -5,7 +5,7 @@ class Move < ApplicationRecord
 
   belongs_to :user
 
-  validates :name,
+  validates :title,
             presence: true,
             length: { maximum: 255 }
 end

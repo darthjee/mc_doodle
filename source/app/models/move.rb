@@ -1,4 +1,8 @@
 class Move < ApplicationRecord
+  def self.table_name_prefix
+    'move_'
+  end
+
   belongs_to :user
 
   validates :name,

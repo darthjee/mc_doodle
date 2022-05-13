@@ -10,7 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_21_210137) do
+ActiveRecord::Schema.define(version: 2022_05_13_190040) do
+
+  create_table "move_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name", limit: 20, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "move_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "move_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "fk_rails_07f6b9687f"
+    t.index ["move_id"], name: "fk_rails_bd49b304b2"
+  end
+
+  create_table "moves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "fk_rails_9372d002aa"
+  end
 
   create_table "sessions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -30,5 +54,8 @@ ActiveRecord::Schema.define(version: 2020_09_21_210137) do
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 
+  add_foreign_key "move_items", "move_categories", column: "category_id"
+  add_foreign_key "move_items", "moves"
+  add_foreign_key "moves", "users"
   add_foreign_key "sessions", "users"
 end

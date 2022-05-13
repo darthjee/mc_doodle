@@ -5,6 +5,8 @@ class Move < ApplicationRecord
     'move_'
   end
 
+  ALLOWED_ATTRIBUTES=%i[name].freeze
+
   belongs_to :user
 
   validates :name,

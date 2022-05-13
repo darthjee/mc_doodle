@@ -39,7 +39,7 @@ describe Move::Decorator do
 
         let(:expected_errors) do
           {
-            title: ["is too long (maximum is 255 characters)"]
+            title: ['is too long (maximum is 255 characters)']
           }
         end
 
@@ -88,7 +88,7 @@ describe Move::Decorator do
 
         let(:expected_errors) do
           {
-            title: ["is too long (maximum is 255 characters)"]
+            title: ['is too long (maximum is 255 characters)']
           }
         end
 

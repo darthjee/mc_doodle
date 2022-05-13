@@ -5,6 +5,8 @@ class CreateMoveItems < ActiveRecord::Migration[5.2]
       t.string :name, null: false
 
       t.timestamps
+
+      t.foreign_key :moves
     end
   end
 end

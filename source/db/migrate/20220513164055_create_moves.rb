@@ -4,6 +4,8 @@ class CreateMoves < ActiveRecord::Migration[5.2]
       t.bigint :user_id, null: false
       t.string :title, null: false
       t.timestamps
+
+     t.foreign_key :users
     end
   end
 end

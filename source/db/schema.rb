@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2022_05_13_165709) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["move_id"], name: "fk_rails_bd49b304b2"
   end
 
   create_table "moves", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -24,6 +25,7 @@ ActiveRecord::Schema.define(version: 2022_05_13_165709) do
     t.string "title", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "fk_rails_9372d002aa"
   end
 
   create_table "sessions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -44,5 +46,7 @@ ActiveRecord::Schema.define(version: 2022_05_13_165709) do
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 
+  add_foreign_key "move_items", "moves"
+  add_foreign_key "moves", "users"
   add_foreign_key "sessions", "users"
 end

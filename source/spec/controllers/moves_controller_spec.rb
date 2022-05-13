@@ -53,10 +53,13 @@ describe MovesController, type: :controller do
 
     render_views
 
-    before { create_list(:move, moves_count) }
+    before do
+      create_list(:move, moves_count, user: user)
+      create_list(:move, moves_count)
+    end
 
     context 'when requesting json', :not_cached do
-      let(:expected_object) { Move.all }
+      let(:expected_object) { user.moves }
 
       before do
         get :index, params: parameters.merge(format: :json)

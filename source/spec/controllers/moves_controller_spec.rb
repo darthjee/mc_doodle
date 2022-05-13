@@ -85,7 +85,7 @@ describe MovesController, :logged, type: :controller do
 
       context 'when there are too many moves' do
         let(:moves_count) { 2 * Settings.pagination + 1 }
-        let(:expected_object) { Move.limit(Settings.pagination) }
+        let(:expected_object) { user.moves.limit(Settings.pagination) }
 
         it { expect(response).to be_successful }
 
@@ -108,7 +108,7 @@ describe MovesController, :logged, type: :controller do
 
       context 'when requesting last page' do
         let(:moves_count) { 2 * Settings.pagination + 1 }
-        let(:expected_object) { Move.offset(2 * Settings.pagination) }
+        let(:expected_object) { user.moves.offset(2 * Settings.pagination) }
         let(:parameters)      { { page: 3 } }
 
         it { expect(response).to be_successful }
@@ -185,7 +185,7 @@ describe MovesController, :logged, type: :controller do
 
         let(:move_attributes) do
           move.attributes.reject do |key, _|
-            %w[id created_at updated_at].include? key
+            %w[id user_id created_at updated_at].include? key
           end
         end
 
@@ -208,7 +208,7 @@ describe MovesController, :logged, type: :controller do
   describe 'GET show' do
     render_views
 
-    let(:move)    { create(:move) }
+    let(:move)    { create(:move, user: user) }
     let(:move_id) { move.id }
 
     context 'when requesting html and ajax is true', :cached do
@@ -249,7 +249,7 @@ describe MovesController, :logged, type: :controller do
   describe 'GET edit' do
     render_views
 
-    let(:move)    { create(:move) }
+    let(:move)    { create(:move, user: user) }
     let(:move_id) { move.id }
 
     context 'when requesting html', :cached do
@@ -273,11 +273,11 @@ describe MovesController, :logged, type: :controller do
 
   describe 'PATCH update' do
     context 'when requesting json format' do
-      let(:move)    { create(:move) }
+
+      let(:move)    { create(:move, user: user) }
       let(:move_id) { move.id }
       let(:expected_json) do
-        Move::Decorator.new(expected_object)
-          .as_json.merge('offset' => -20.0).to_json
+        Move::Decorator.new(expected_object.reload).to_json
       end
 
       let(:parameters) do
@@ -286,15 +286,15 @@ describe MovesController, :logged, type: :controller do
 
       let(:payload) do
         {
-          offset: -20
+          title: 'new title'
         }
       end
 
       let(:expected_object) { move }
 
-      it 'does not updates the move' do
+      it 'updates the move' do
         expect { patch :update, params: parameters }
-          .not_to(change { move.reload.offset })
+          .to change { move.reload.title }
       end
 
       it 'returns move with errors' do

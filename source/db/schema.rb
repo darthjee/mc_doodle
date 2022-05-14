@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_13_190040) do
+ActiveRecord::Schema.define(version: 2022_05_14_183809) do
 
   create_table "move_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", limit: 20, null: false
@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(version: 2022_05_13_190040) do
   create_table "sessions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "expiration"
+    t.string "token", limit: 64, null: false
+    t.index ["token"], name: "index_sessions_on_token", unique: true
     t.index ["user_id"], name: "fk_rails_758836b4f0"
   end
 

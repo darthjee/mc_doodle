@@ -10,7 +10,7 @@ describe LoginController do
   let(:request_password) { password }
 
   let(:expected_json) do
-    User::Decorator.new(user).to_json
+    Session::Decorator.new(session).to_json
   end
 
   let(:parameters) do
@@ -23,6 +23,8 @@ describe LoginController do
   end
 
   describe 'POST create' do
+    let(:session) { user.sessions.last }
+
     context 'when login is correct' do
       it 'creates a session' do
         expect do

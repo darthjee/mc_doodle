@@ -10,11 +10,11 @@ class LoginController < ApplicationController
   before_action :check_logged!, only: :check
 
   def create
-    render json: User::Decorator.new(user)
+    render json: Session::Decorator.new(logged_session)
   end
 
   def check
-    render json: User::Decorator.new(logged_user)
+    render json: Session::Decorator.new(logged_session)
   end
 
   def logoff

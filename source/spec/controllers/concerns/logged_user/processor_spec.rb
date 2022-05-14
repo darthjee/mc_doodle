@@ -148,7 +148,7 @@ describe LoggedUser::Processor do
 
     context 'when user is logged with an invalid token' do
       before do
-        headers['Authorization'] = "Bearer some token"
+        headers['Authorization'] = 'Bearer some token'
       end
 
       it do

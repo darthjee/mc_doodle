@@ -38,11 +38,11 @@ module LoggedUser
         expiration: Settings.session_period.from_now
       )
     end
-    
+
     def session_from_cookie
       active_sessions.find_by(id: session_id)
     end
-    
+
     def session_from_headers
       active_sessions.find_by(token: token)
     end
@@ -54,7 +54,7 @@ module LoggedUser
     end
 
     def token
-      headers['Authorization']&.gsub(/Bearer */,'')
+      headers['Authorization']&.gsub(/Bearer */, '')
     end
 
     def signed_cookies

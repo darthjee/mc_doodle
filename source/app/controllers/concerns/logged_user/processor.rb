@@ -24,7 +24,7 @@ module LoggedUser
     end
 
     def session
-      @session ||= Session.active.find_by(id: session_id)
+      @session ||= session_from_cookie || session_from_headers
     end
 
     alias logged_session session
@@ -38,6 +38,14 @@ module LoggedUser
         expiration: Settings.session_period.from_now
       )
     end
+    
+    def session_from_cookie
+      active_sessions.find_by(id: session_id)
+    end
+    
+    def session_from_headers
+      active_sessions.find_by(token: token)
+    end
 
     def session_id
       signed_cookies[SESSION_KEY]
@@ -45,12 +53,24 @@ module LoggedUser
       nil
     end
 
+    def token
+      headers['Authorization']&.gsub(/Bearer */,'')
+    end
+
     def signed_cookies
       @signed_cookies ||= cookies.signed
     end
 
+    def active_sessions
+      Session.active
+    end
+
     def cookies
       @cookies ||= controller.send(:cookies)
+    end
+
+    def headers
+      @headers ||= controller.send(:headers)
     end
 
     def params

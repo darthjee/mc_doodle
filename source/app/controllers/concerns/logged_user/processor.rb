@@ -23,6 +23,12 @@ module LoggedUser
       @logged_user ||= session&.user
     end
 
+    def session
+      @session ||= Session.active.find_by(id: session_id)
+    end
+
+    alias logged_session session
+
     private
 
     attr_reader :controller
@@ -31,10 +37,6 @@ module LoggedUser
       @session = logged_user.sessions.create(
         expiration: Settings.session_period.from_now
       )
-    end
-
-    def session
-      @session ||= Session.active.find_by(id: session_id)
     end
 
     def session_id

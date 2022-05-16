@@ -3,9 +3,10 @@
 require 'spec_helper'
 
 fdescribe Move::Item::Create do
-  let(:items)    { move.items }
-  let(:move)     { create(:move) }
-  let(:category) { create(:move_category) }
+  let(:items)     { move.items }
+  let(:move)      { create(:move) }
+
+  let!(:category) { create(:move_category) }
 
   describe '.process' do
     subject(:item) { described_class.process(parameters, items) }
@@ -22,6 +23,15 @@ fdescribe Move::Item::Create do
       expect { item }
         .to change { items.reload.count }
         .by(1)
+    end
+
+    it do
+      expect(item).to be_a(Move::Item)
+    end
+
+    it do
+      expect { item }
+        .not_to change(Move::Category, :count)
     end
 
     it 'sets the correct category' do
@@ -50,6 +60,15 @@ fdescribe Move::Item::Create do
           .not_to change { other_move.items.reload.count }
       end
 
+      it do
+        expect(item).to be_a(Move::Item)
+      end
+
+      it do
+        expect { item }
+          .not_to change(Move::Category, :count)
+      end
+
       context 'when an existing category object is given' do
         let(:params) do
           {
@@ -65,6 +84,15 @@ fdescribe Move::Item::Create do
           expect { item }
             .to change { items.reload.count }
             .by(1)
+        end
+
+        it do
+          expect(item).to be_a(Move::Item)
+        end
+
+        it do
+          expect { item }
+            .not_to change(Move::Category, :count)
         end
 
         it 'sets the correct category' do
@@ -87,6 +115,16 @@ fdescribe Move::Item::Create do
         it do
           expect { item }
             .to change { items.reload.count }
+            .by(1)
+        end
+
+        it do
+          expect(item).to be_a(Move::Item)
+        end
+
+        it do
+          expect { item }
+            .to change(Move::Category, :count)
             .by(1)
         end
 

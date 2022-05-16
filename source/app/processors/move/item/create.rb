@@ -27,7 +27,8 @@ class Move < ApplicationRecord
       end
 
       def category
-        return Category.find(category_id)
+        return Category.find(category_id) if category_id
+        Category.new(params['category'].permit('name'))
       end
 
       def category_id

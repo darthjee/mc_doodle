@@ -168,6 +168,35 @@ fdescribe Move::Item::Create do
     context 'when there is a validation error' do
       let(:params) do
         {
+          name: 'n' * 500,
+          category: {
+            name: 'some new category'
+          }
+        }
+      end
+
+      it do
+        expect { item }
+          .not_to change { items.reload.count }
+      end
+
+      it do
+        expect(item).to be_a(Move::Item)
+      end
+
+      it do
+        expect { item }
+          .not_to change(Move::Category, :count)
+      end
+
+      it do
+        expect(item.errors).not_to be_empty
+      end
+    end
+
+    context 'when there is a validation error on category' do
+      let(:params) do
+        {
           name: 'some name',
         }
       end

@@ -28,6 +28,8 @@ class Move < ApplicationRecord
 
       def category
         return Category.find(category_id) if category_id
+        return unless params['category'].present?
+        return unless params['category']['name']
 
         Category.find_or_initialize_by(
           name: params['category']['name']
@@ -35,7 +37,9 @@ class Move < ApplicationRecord
       end
 
       def category_id
-        params['category_id'] || params['category']['id']
+        return params['category_id'] if params['category_id'].present?
+        return params['category']['id'] if params['category'].present?
+        nil
       end
     end
   end

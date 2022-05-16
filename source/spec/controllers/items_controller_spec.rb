@@ -216,8 +216,12 @@ describe ItemsController, :logged, type: :controller do
     let(:item_id) { item.id }
 
     context 'when requesting html and ajax is true', :cached do
+      let(:parameters) do
+        { format: :html, ajax: true, id: item_id, move_id: move.id }
+      end
+
       before do
-        get :show, params: { format: :html, ajax: true, id: item_id, move_id: move.id }
+        get :show, params: parameters
       end
 
       it { expect(response).to be_successful }
@@ -268,8 +272,12 @@ describe ItemsController, :logged, type: :controller do
     end
 
     context 'when requesting html and ajax is true', :cached do
+      let(:parameters) do
+        { format: :html, ajax: true, id: item_id, move_id: move.id }
+      end
+
       before do
-        get :edit, params: { format: :html, ajax: true, id: item_id, move_id: move.id }
+        get :edit, params: parameters
       end
 
       it { expect(response).to be_successful }

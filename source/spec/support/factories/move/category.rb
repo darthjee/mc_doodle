@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :move_category, class: 'Move::Category' do
-    sequence(:name) { |n| "Category ##{n}" }
+    sequence(:name) { |n| "Cat ##{n}" }
   end
 end

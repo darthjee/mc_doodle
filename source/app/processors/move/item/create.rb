@@ -13,12 +13,26 @@ class Move < ApplicationRecord
       end
 
       def process
-        items.create(params)
+        items.create(attributes)
       end
 
       private
 
       attr_reader :params, :items
+
+      def attributes
+        params
+          .permit(:name)
+          .merge(category: category)
+      end
+
+      def category
+        return Category.find(category_id)
+      end
+
+      def category_id
+        params['category_id'] || params['category']['id']
+      end
     end
   end
 end

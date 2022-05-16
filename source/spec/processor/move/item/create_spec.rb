@@ -8,8 +8,9 @@ fdescribe Move::Item::Create do
   let(:category) { create(:move_category) }
 
   describe '.process' do
-    subject(:item) { described_class.process(params, items) }
+    subject(:item) { described_class.process(parameters, items) }
 
+    let(:parameters) { ActionController::Parameters.new(params) }
     let(:params) do
       {
         name: 'some name',
@@ -25,6 +26,51 @@ fdescribe Move::Item::Create do
 
     it 'sets the correct category' do
       expect(item.category).to eq(category)
+    end
+
+    context 'when sending invalid parameters' do
+      let(:other_move) { create(:move) }
+
+      let(:params) do
+        {
+          name: 'some name',
+          category_id: category.id,
+          move_id: other_move.id
+        }
+      end
+
+      it do
+        expect { item }
+          .to change { items.reload.count }
+          .by(1)
+      end
+
+      it do
+        expect { item }
+          .not_to change { other_move.items.reload.count }
+      end
+
+      context 'when an existing category object is given' do
+        let(:params) do
+          {
+            name: 'some name',
+            category: {
+              id: category.id,
+              name: category.name
+            }
+          }
+        end
+
+        it do
+          expect { item }
+            .to change { items.reload.count }
+            .by(1)
+        end
+
+        it 'sets the correct category' do
+          expect(item.category).to eq(category)
+        end
+      end
     end
   end
 end

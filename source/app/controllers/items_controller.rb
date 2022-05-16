@@ -9,9 +9,16 @@ class ItemsController < ApplicationController
   resource_for Move::Item,
                except: :delete,
                paginated: true,
-               per_page: Settings.pagination
+               per_page: Settings.pagination,
+               build_with: :build_item
 
   private
+
+  def build_item
+    Move::Item::Create.process(
+      item_params, items
+    )
+  end
 
   def moves
     logged_user.moves

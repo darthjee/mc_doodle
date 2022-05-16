@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Move::Item::Decorator do
   subject(:decorator) { described_class.new(object) }
 
-  let(:attributes) { %w[id name move_id] }
+  let(:attributes) { %w[id name move_id category_id] }
   let(:decorator_json) { JSON.parse(decorator.to_json) }
 
   describe '#to_json' do
@@ -67,7 +67,8 @@ describe Move::Item::Decorator do
           {
             id: item.id,
             name: item.name,
-            move_id: item.move_id
+            move_id: item.move_id,
+            category_id: item.category_id
           }
         end.as_json
       end
@@ -101,6 +102,7 @@ describe Move::Item::Decorator do
               id: item.id,
               name: item.name,
               move_id: item.move_id,
+              category_id: item.category_id,
               errors: expected_errors
             }
           end.as_json

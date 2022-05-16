@@ -5,6 +5,7 @@ class Move < ApplicationRecord
     class Decorator < ::ModelDecorator
       expose :name
       expose :move_id
+      expose :category_id
     end
   end
 end

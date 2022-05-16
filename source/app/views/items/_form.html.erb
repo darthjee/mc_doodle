@@ -1,11 +1,11 @@
 <div class="card shadow-sm">
   <div class="card-header">
     <h4 class="my-0 font-weight-normal">
-      Move
+      Item
     </h4>
   </div>
   <div class="card-body">
-    <%= form.input(:title, placeholder: "From A to B") %>
+    <%= form.input(:name, placeholder: "Something") %>
 
     <div class="form-group row">
       <div class="offset-2 col-10">
@@ -20,7 +20,10 @@
         <%= form.only(:display) do
           form.button(
             classes: 'btn-primary',
-            href: angular_path_to(:edit_move, { id: "{{gnc.data.id}}" }),
+            href: angular_path_to(
+              :edit_move_item,
+              { id: "{{gnc.data.id}}", move_id: "{{gnc.data.move_id}}" }
+            ),
             text: 'Edit'
           )
         end %>

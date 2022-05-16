@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class MovesController < ApplicationController
-  resource_for :category,
+class CategoriesController < ApplicationController
+  resource_for Move::Category,
                only: :index,
                paginated: true,
                per_page: Settings.pagination

@@ -2,26 +2,23 @@
 
 require 'spec_helper'
 
-describe MovesController, :logged, type: :controller do
-  let(:user) { logged_user }
-
+fdescribe CategoriesController, type: :controller do
   let(:expected_json) do
-    Move::Decorator.new(expected_object).to_json
+    Move::Category::Decorator.new(expected_object).to_json
   end
 
   describe 'GET index' do
-    let(:moves_count) { 1 }
+    let(:categories_count) { 1 }
     let(:parameters) { {} }
 
     render_views
 
     before do
-      create_list(:move, moves_count, user: user)
-      create_list(:move, moves_count)
+      create_list(:move_category, categories_count)
     end
 
     context 'when requesting json', :not_cached do
-      let(:expected_object) { user.moves }
+      let(:expected_object) { Move::Category.all }
 
       before do
         get :index, params: parameters.merge(format: :json)
@@ -29,7 +26,7 @@ describe MovesController, :logged, type: :controller do
 
       it { expect(response).to be_successful }
 
-      it 'returns moves serialized' do
+      it 'returns categories serialized' do
         expect(response.body).to eq(expected_json)
       end
 
@@ -45,13 +42,13 @@ describe MovesController, :logged, type: :controller do
         expect(response.headers['per_page']).to eq(Settings.pagination)
       end
 
-      context 'when there are too many moves' do
-        let(:moves_count) { 2 * Settings.pagination + 1 }
-        let(:expected_object) { user.moves.limit(Settings.pagination) }
+      context 'when there are too many categories' do
+        let(:categories_count) { 2 * Settings.pagination + 1 }
+        let(:expected_object) { Move::Category.all.limit(Settings.pagination) }
 
         it { expect(response).to be_successful }
 
-        it 'returns moves serialized' do
+        it 'returns categories serialized' do
           expect(response.body).to eq(expected_json)
         end
 
@@ -69,13 +66,13 @@ describe MovesController, :logged, type: :controller do
       end
 
       context 'when requesting last page' do
-        let(:moves_count) { 2 * Settings.pagination + 1 }
-        let(:expected_object) { user.moves.offset(2 * Settings.pagination) }
+        let(:categories_count) { 2 * Settings.pagination + 1 }
+        let(:expected_object) { Move::Category.all.offset(2 * Settings.pagination) }
         let(:parameters)      { { page: 3 } }
 
         it { expect(response).to be_successful }
 
-        it 'returns moves serialized' do
+        it 'returns categories serialized' do
           expect(response.body).to eq(expected_json)
         end
 
@@ -91,24 +88,6 @@ describe MovesController, :logged, type: :controller do
           expect(response.headers['per_page']).to eq(Settings.pagination)
         end
       end
-    end
-
-    context 'when requesting html and ajax is true', :cached do
-      before do
-        get :index, params: { format: :html, ajax: true }
-      end
-
-      it { expect(response).to be_successful }
-
-      it { expect(response).to render_template('moves/index') }
-    end
-
-    context 'when requesting html and ajax is false' do
-      before do
-        get :index
-      end
-
-      it { expect(response).to redirect_to('#/moves') }
     end
   end
 end

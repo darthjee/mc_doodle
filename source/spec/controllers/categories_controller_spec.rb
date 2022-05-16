@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-fdescribe CategoriesController, type: :controller do
+describe CategoriesController, type: :controller do
   let(:expected_json) do
     Move::Category::Decorator.new(expected_object).to_json
   end
@@ -67,8 +67,10 @@ fdescribe CategoriesController, type: :controller do
 
       context 'when requesting last page' do
         let(:categories_count) { 2 * Settings.pagination + 1 }
-        let(:expected_object) { Move::Category.all.offset(2 * Settings.pagination) }
-        let(:parameters)      { { page: 3 } }
+        let(:expected_object) do
+          Move::Category.all.offset(2 * Settings.pagination)
+        end
+        let(:parameters) { { page: 3 } }
 
         it { expect(response).to be_successful }
 

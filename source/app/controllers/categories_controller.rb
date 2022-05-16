@@ -5,5 +5,4 @@ class CategoriesController < ApplicationController
                only: :index,
                paginated: true,
                per_page: Settings.pagination
-
 end

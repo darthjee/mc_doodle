@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-fdescribe Move::Item::Create do
+describe Move::Item::Create do
   let(:items)     { move.items }
   let(:move)      { create(:move) }
 
@@ -58,7 +58,7 @@ fdescribe Move::Item::Create do
 
       it do
         expect { item }
-          .not_to change { other_move.items.reload.count }
+          .not_to(change { other_move.items.reload.count })
       end
 
       it do
@@ -177,7 +177,7 @@ fdescribe Move::Item::Create do
 
       it do
         expect { item }
-          .not_to change { items.reload.count }
+          .not_to(change { items.reload.count })
       end
 
       it do
@@ -197,13 +197,13 @@ fdescribe Move::Item::Create do
     context 'when there is a validation error on category' do
       let(:params) do
         {
-          name: 'some name',
+          name: 'some name'
         }
       end
 
       it do
         expect { item }
-          .not_to change { items.reload.count }
+          .not_to(change { items.reload.count })
       end
 
       it do

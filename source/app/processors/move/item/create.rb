@@ -39,6 +39,7 @@ class Move < ApplicationRecord
       def category_id
         return params['category_id'] if params['category_id'].present?
         return params['category']['id'] if params['category'].present?
+
         nil
       end
     end

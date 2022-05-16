@@ -100,6 +100,36 @@ fdescribe Move::Item::Create do
         end
       end
 
+      context 'when an existing category object is given without the id' do
+        let(:params) do
+          {
+            name: 'some name',
+            category: {
+              name: category.name
+            }
+          }
+        end
+
+        it do
+          expect { item }
+            .to change { items.reload.count }
+            .by(1)
+        end
+
+        it do
+          expect(item).to be_a(Move::Item)
+        end
+
+        it do
+          expect { item }
+            .not_to change(Move::Category, :count)
+        end
+
+        it 'sets the correct category' do
+          expect(item.category).to eq(category)
+        end
+      end
+
       context 'when a non existing category object is given' do
         let(:new_category_name) { 'some name' }
 

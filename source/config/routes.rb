@@ -12,5 +12,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :moves, except: %i[delete]
+  resources :moves, except: %i[delete] do
+    resources :items, except: %i[delete]
+  end
 end

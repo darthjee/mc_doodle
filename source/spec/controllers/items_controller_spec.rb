@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-fdescribe ItemsController, :logged, type: :controller do
+describe ItemsController, :logged, type: :controller do
   let(:user) { logged_user }
   let(:move) { create(:move, user: user) }
 
@@ -154,7 +154,8 @@ fdescribe ItemsController, :logged, type: :controller do
 
   describe 'POST create' do
     context 'when requesting json format' do
-      let(:item) { Move::Item.last }
+      let(:item)     { move.items.reload.last }
+      let(:category) { create(:move_category) }
 
       let(:parameters) do
         { format: :json, item: payload, move_id: move.id }
@@ -162,7 +163,8 @@ fdescribe ItemsController, :logged, type: :controller do
 
       let(:payload) do
         {
-          item: 'my item'
+          name: 'my item',
+          category_id: category.id
         }
       end
 
@@ -187,12 +189,12 @@ fdescribe ItemsController, :logged, type: :controller do
 
         let(:item_attributes) do
           item.attributes.reject do |key, _|
-            %w[id user_id created_at updated_at].include? key
+            %w[id created_at updated_at].include? key
           end
         end
 
         let(:expected_item_attributes) do
-          payload.stringify_keys
+          payload.merge(move_id: move.id).stringify_keys
         end
 
         it 'returns created item' do
@@ -215,7 +217,7 @@ fdescribe ItemsController, :logged, type: :controller do
 
     context 'when requesting html and ajax is true', :cached do
       before do
-        get :show, params: { format: :html, ajax: true, id: item_id }
+        get :show, params: { format: :html, ajax: true, id: item_id, move_id: move.id }
       end
 
       it { expect(response).to be_successful }
@@ -225,11 +227,11 @@ fdescribe ItemsController, :logged, type: :controller do
 
     context 'when requesting html and ajax is false' do
       before do
-        get :show, params: { id: item_id }
+        get :show, params: { id: item_id, move_id: move.id }
       end
 
       it do
-        expect(response).to redirect_to("#/items/#{item_id}")
+        expect(response).to redirect_to("#/moves/#{move.id}/items/#{item_id}")
       end
     end
 
@@ -237,7 +239,7 @@ fdescribe ItemsController, :logged, type: :controller do
       let(:expected_object) { item }
 
       before do
-        get :show, params: { id: item_id, format: :json }
+        get :show, params: { id: item_id, format: :json, move_id: move.id }
       end
 
       it { expect(response).to be_successful }
@@ -256,15 +258,18 @@ fdescribe ItemsController, :logged, type: :controller do
 
     context 'when requesting html', :cached do
       before do
-        get :edit, params: { format: :html, id: item_id }
+        get :edit, params: { format: :html, id: item_id, move_id: move.id }
       end
 
-      it { expect(response).to redirect_to("#/items/#{item_id}/edit.html") }
+      it do
+        expect(response)
+          .to redirect_to("#/moves/#{move.id}/items/#{item_id}/edit.html")
+      end
     end
 
     context 'when requesting html and ajax is true', :cached do
       before do
-        get :edit, params: { format: :html, ajax: true, id: item_id }
+        get :edit, params: { format: :html, ajax: true, id: item_id, move_id: move.id }
       end
 
       it { expect(response).to be_successful }
@@ -282,7 +287,7 @@ fdescribe ItemsController, :logged, type: :controller do
       end
 
       let(:parameters) do
-        { format: :json, id: item_id, item: payload }
+        { format: :json, id: item_id, item: payload, move_id: move.id }
       end
 
       let(:payload) do

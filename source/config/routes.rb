@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :categories, only: :index
+
   resources :moves, except: %i[delete] do
     resources :items, except: %i[delete]
   end

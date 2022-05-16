@@ -6,7 +6,7 @@ class ItemsController < ApplicationController
 
   protect_from_forgery except: %i[create update]
 
-  resource_for :move,
+  resource_for Move::Item,
     except: :delete,
     paginated: true,
     per_page: Settings.pagination

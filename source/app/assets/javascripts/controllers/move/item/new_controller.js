@@ -1,5 +1,5 @@
 (function(angular, _) {
-  var module = angular.module('move/item/index_controller', ['cyberhawk']);
+  var module = angular.module('move/item/new_controller', ['cyberhawk']);
 
   var Methods = {
     requestCategories: function() {

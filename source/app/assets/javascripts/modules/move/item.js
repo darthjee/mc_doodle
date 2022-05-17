@@ -1,5 +1,5 @@
 (function(angular) {
   var module = angular.module('move/item', [
-    'move/item/index_controller'
+    'move/item/new_controller'
   ]);
 }(window.angular));

@@ -27,7 +27,6 @@ services:
     image: darthjee/dev_mc_doodle
     volumes:
       - ./source:/home/app/app
-      - /Users/fernandofavini/projects/mine/cyberhawk:/home/app/app/vendor/assets/bower_components/cyberhawk
     links:
       - dev_mc_doodle_mysql:mysql
     env_file: .env.dev

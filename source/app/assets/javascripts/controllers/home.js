@@ -6,7 +6,7 @@
 
 
   function Controller(builder, notifier, $location) {
-    this.construct(builder.build($location), notifier, $location);
+    this.construct(builder, notifier, $location);
   }
 
   var fn = Controller.prototype;

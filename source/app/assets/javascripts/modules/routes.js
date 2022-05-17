@@ -18,6 +18,11 @@
       }
     }, {
       routes: ["/moves", "/moves/new", "/moves/:id", "/moves/:id/edit"]
+    }, {
+      routes: [
+        "/moves/:move_id/items", "/moves/:move_id/items/new",
+        "/moves/:move_id/items/:id", "/moves/:move_id/items/:id/edit"
+      ]
     }];
     provider.$get().bindRoutes();
   }]);

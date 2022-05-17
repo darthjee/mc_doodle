@@ -3,11 +3,12 @@
 
   var Methods = {
     requestCategories: function() {
-      var that = this;
       this.requester.http.get('/categories')
-        .then(function(response) {
-          that.categories = response.data;
-        });
+        .then(this._setCategories)
+    },
+
+    _setCategories: function(response) {
+      this.categories = response.data;
     }
   };
 

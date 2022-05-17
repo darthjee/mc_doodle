@@ -14,10 +14,10 @@
 
   module.config(['cyberhawkProvider', function(provider) {
     var Controller = provider.$get().controller,
-      path = '/moves/:move_id/items/new';
+      paths = ['/moves/:move_id/items/new', '/moves/:move_id/items/:id/edit'];
 
-    Controller.withPath(path, Methods);
+    Controller.withPath(paths, Methods);
 
-    Controller.on(path, 'request', 'requestCategories');
+    Controller.on(paths, 'request', 'requestCategories');
   }]);
 }(window.angular, window._));

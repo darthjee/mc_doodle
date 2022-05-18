@@ -20,6 +20,10 @@ class ItemsController < ApplicationController
     )
   end
 
+  def item_params
+    params.require(:item)
+  end
+
   def moves
     logged_user.moves
   end

@@ -8,7 +8,7 @@
     <%= form.input(:name, placeholder: "Something") %>
 
     <%= form.ng_select(
-      :category_id,
+      "category.id",
       options: 'gnc.categories',
       reference_key: :id,
       text_field: :name

@@ -12,11 +12,11 @@
     },
 
     _transformData: function() {
-      if (!this.data.category_id) {
+      if (!this.data.category || !this.data.category.id) {
         return
       }
 
-      this.data.category_id = this.data.category_id.toString();
+      this.data.category.id = this.data.category.id.toString();
     }
   };
 

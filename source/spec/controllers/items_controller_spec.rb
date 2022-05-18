@@ -164,7 +164,10 @@ describe ItemsController, :logged, type: :controller do
       let(:payload) do
         {
           name: 'my item',
-          category_id: category.id
+          category: {
+            id: category.id,
+            name: category.name
+          }
         }
       end
 

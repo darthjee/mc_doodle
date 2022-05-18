@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Move::Item::Decorator do
   subject(:decorator) { described_class.new(object) }
 
-  let(:attributes) { %w[id name move_id category_id] }
+  let(:attributes) { %w[id name move_id] }
   let(:decorator_json) { JSON.parse(decorator.to_json) }
 
   describe '#to_json' do
@@ -16,6 +16,11 @@ describe Move::Item::Decorator do
         object
           .as_json
           .slice(*attributes)
+          .merge('category' => category_attributes)
+      end
+
+      let(:category_attributes) do
+        object.category.as_json.slice('id', 'name')
       end
 
       it 'returns expected json' do
@@ -47,6 +52,7 @@ describe Move::Item::Decorator do
           object
             .as_json
             .slice(*attributes)
+            .merge(category: category_attributes)
             .merge(errors: expected_errors)
             .deep_stringify_keys
         end
@@ -68,7 +74,10 @@ describe Move::Item::Decorator do
             id: item.id,
             name: item.name,
             move_id: item.move_id,
-            category_id: item.category_id
+            category: {
+              id: item.category.id,
+              name: item.category.name
+            }
           }
         end.as_json
       end
@@ -102,7 +111,10 @@ describe Move::Item::Decorator do
               id: item.id,
               name: item.name,
               move_id: item.move_id,
-              category_id: item.category_id,
+              category: {
+                id: item.category.id,
+                name: item.category.name
+              },
               errors: expected_errors
             }
           end.as_json

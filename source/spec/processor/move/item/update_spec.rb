@@ -11,9 +11,9 @@ describe Move::Item::Update do
 
     let(:parameters) { ActionController::Parameters.new(params) }
 
-    context 'when only the name is changed' do
-      let(:new_name) { 'some new name' }
+    let(:new_name) { 'some new name' }
 
+    context 'when only the name is changed' do
       let(:params) do
         {
           name: new_name
@@ -38,22 +38,31 @@ describe Move::Item::Update do
       end
     end
 
-    xcontext 'when sending invalid parameters' do
+    context 'when sending invalid parameters' do
       let(:other_move) { create(:move) }
 
       let(:params) do
         {
-          name: 'some name',
+          name: new_name,
           category_id: category.id,
           move_id: other_move.id
         }
       end
 
-      it do
-        expect { item }
-          .to change { items.reload.count }
-          .by(1)
+      it 'updates the name' do
+        expect { update }
+          .to change { item.reload.name }
+          .from(item.name)
+          .to(new_name)
       end
+
+      it 'updates the category' do
+        expect { update }
+          .to change { item.reload.category }
+          .from(item.category)
+          .to(category)
+      end
+
 
       it do
         expect { item }
@@ -130,7 +139,7 @@ describe Move::Item::Update do
         end
       end
 
-      context 'when a non existing category object is given' do
+      xcontext 'when a non existing category object is given' do
         let(:new_category_name) { 'some name' }
 
         let(:params) do

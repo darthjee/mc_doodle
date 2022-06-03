@@ -5,6 +5,7 @@ require 'spec_helper'
 describe Move::Item::Update do
   let!(:item)      { create(:move_item) }
   let!(:category) { create(:move_category) }
+  let(:original_category) { item.category }
 
   describe '.process' do
     subject(:update) { described_class.process(parameters, item) }
@@ -78,10 +79,10 @@ describe Move::Item::Update do
           .not_to change(Move::Category, :count)
       end
 
-      xcontext 'when an existing category object is given' do
+      context 'when an existing category object is given' do
         let(:params) do
           {
-            name: 'some name',
+            name: new_name,
             category: {
               id: category.id,
               name: category.name
@@ -89,57 +90,33 @@ describe Move::Item::Update do
           }
         end
 
-        it do
-          expect { item }
-            .to change { items.reload.count }
-            .by(1)
-        end
-
-        it do
-          expect(item).to be_a(Move::Item)
-        end
-
-        it do
-          expect { item }
-            .not_to change(Move::Category, :count)
-        end
-
-        it 'sets the correct category' do
-          expect(item.category).to eq(category)
+        it 'updates the category'do
+          expect { update }
+            .to change { item.reload.category }
+            .from(item.category)
+            .to(category)
         end
       end
 
-      xcontext 'when an existing category object is given without the id' do
+      context 'when an existing category object is given without the id' do
         let(:params) do
           {
-            name: 'some name',
+            name: item.name,
             category: {
               name: category.name
             }
           }
         end
 
-        it do
-          expect { item }
-            .to change { items.reload.count }
-            .by(1)
-        end
-
-        it do
-          expect(item).to be_a(Move::Item)
-        end
-
-        it do
-          expect { item }
-            .not_to change(Move::Category, :count)
-        end
-
-        it 'sets the correct category' do
-          expect(item.category).to eq(category)
+        it 'updates the category'do
+          expect { update }
+            .to change { item.reload.category }
+            .from(item.category)
+            .to(category)
         end
       end
 
-      xcontext 'when a non existing category object is given' do
+      context 'when a non existing category object is given' do
         let(:new_category_name) { 'some name' }
 
         let(:params) do
@@ -151,24 +128,21 @@ describe Move::Item::Update do
           }
         end
 
-        it do
-          expect { item }
-            .to change { items.reload.count }
-            .by(1)
+        it 'updates the category'do
+          expect { update }
+            .to change { item.reload.category_id }
+            .from(item.category.id)
+        end
+
+        it 'does not change original category'do
+          expect { update }
+            .not_to change { original_category.reload.name }
         end
 
         it do
-          expect(item).to be_a(Move::Item)
-        end
-
-        it do
-          expect { item }
+          expect { update }
             .to change(Move::Category, :count)
             .by(1)
-        end
-
-        it 'sets the correct category' do
-          expect(item.category.name).to eq(new_category_name)
         end
       end
     end

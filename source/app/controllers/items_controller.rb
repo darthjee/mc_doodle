@@ -10,13 +10,20 @@ class ItemsController < ApplicationController
                except: :delete,
                paginated: true,
                per_page: Settings.pagination,
-               build_with: :build_item
+               build_with: :build_item,
+               update_with: :update_item
 
   private
 
   def build_item
     Move::Item::Create.process(
       item_params, items
+    )
+  end
+
+  def update_item
+    Move::Item::Update.process(
+      item_params, item
     )
   end
 

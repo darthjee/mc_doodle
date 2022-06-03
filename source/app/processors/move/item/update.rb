@@ -9,7 +9,7 @@ class Move < ApplicationRecord
 
       def initialize(params, item)
         @params = params
-        @item  = item
+        @item = item
       end
 
       def process
@@ -31,9 +31,7 @@ class Move < ApplicationRecord
         return item.category unless params['category'].present?
         return item.category unless params['category']['name']
 
-        Category.find_or_initialize_by(
-          name: params['category']['name']
-        )
+        fetch_or_initialize_category
       end
 
       def category_id
@@ -41,6 +39,12 @@ class Move < ApplicationRecord
         return params['category']['id'] if params['category'].present?
 
         nil
+      end
+
+      def fetch_or_initialize_category
+        Category.find_or_initialize_by(
+          name: params['category']['name']
+        )
       end
     end
   end

@@ -1,9 +1,13 @@
-FROM darthjee/circleci_taa:1.0.0 as base
 FROM darthjee/scripts:0.2.1 as scripts
+FROM darthjee/circleci_taa:1.0.0 as base
+
+USER root
+RUN apt-get update && apt-get install -y default-libmysqld-dev
 
 ######################################
 
 FROM base as builder
+USER circleci
 
 ADD source/Gemfile* /home/circleci/project/
 ADD source/bower.json /home/circleci/project/
@@ -29,3 +33,4 @@ COPY --chown=circleci:circleci --from=builder /home/circleci/bundle/ /home/circl
 COPY --chown=circleci:circleci --from=builder /home/circleci/bower/ /home/circleci/.cache/bower/
 
 USER circleci
+USER root

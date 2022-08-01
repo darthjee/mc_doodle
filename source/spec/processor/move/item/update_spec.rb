@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Move::Item::Update do
-  let!(:item)      { create(:move_item) }
+  let!(:item) { create(:move_item) }
   let!(:category) { create(:move_category) }
   let(:original_category) { item.category }
 
@@ -35,7 +35,7 @@ describe Move::Item::Update do
 
       it 'does not change the category' do
         expect { update }
-          .not_to change { item.reload.category }
+          .not_to(change { item.reload.category })
       end
     end
 
@@ -64,7 +64,6 @@ describe Move::Item::Update do
           .to(category)
       end
 
-
       it do
         expect { item }
           .not_to(change { other_move.items.reload.count })
@@ -90,7 +89,7 @@ describe Move::Item::Update do
           }
         end
 
-        it 'updates the category'do
+        it 'updates the category' do
           expect { update }
             .to change { item.reload.category }
             .from(item.category)
@@ -108,7 +107,7 @@ describe Move::Item::Update do
           }
         end
 
-        it 'updates the category'do
+        it 'updates the category' do
           expect { update }
             .to change { item.reload.category }
             .from(item.category)
@@ -128,15 +127,15 @@ describe Move::Item::Update do
           }
         end
 
-        it 'updates the category'do
+        it 'updates the category' do
           expect { update }
             .to change { item.reload.category_id }
             .from(item.category.id)
         end
 
-        it 'does not change original category'do
+        it 'does not change original category' do
           expect { update }
-            .not_to change { original_category.reload.name }
+            .not_to(change { original_category.reload.name })
         end
 
         it do

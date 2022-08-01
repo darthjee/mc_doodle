@@ -1,10 +1,10 @@
-FROM darthjee/dev_mc_doodle-base:0.0.1
+FROM darthjee/dev_mc_doodle-base:0.0.2
 
 WORKDIR /home/app/app
 COPY --chown=app:app source/Gemfile* /home/app/app/
 COPY --chown=app:app source/bower.json /home/app/app/
 
-RUN bundle install --clean
+RUN bundle install
 
 USER app
 RUN bower install

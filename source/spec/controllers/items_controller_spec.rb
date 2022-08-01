@@ -164,7 +164,10 @@ describe ItemsController, :logged, type: :controller do
       let(:payload) do
         {
           name: 'my item',
-          category_id: category.id
+          category: {
+            id: category.id,
+            name: category.name
+          }
         }
       end
 
@@ -194,7 +197,11 @@ describe ItemsController, :logged, type: :controller do
         end
 
         let(:expected_item_attributes) do
-          payload.merge(move_id: move.id).stringify_keys
+          {
+            name: 'my item',
+            category_id: category.id,
+            move_id: move.id
+          }.stringify_keys
         end
 
         it 'returns created item' do
